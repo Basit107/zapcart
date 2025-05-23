@@ -1,0 +1,11 @@
+.env
+**/node_modules
+**/dist
+**/build
+**/coverage
+**/public
+**/lib
+**/out
+**/tmp
+**/temp
+**/logs
