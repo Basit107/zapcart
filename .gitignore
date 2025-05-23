@@ -9,3 +9,10 @@
 **/tmp
 **/temp
 **/logs
+**/backend/node_modules/iconv-lite/LICENSE
+**/**/LICENSE
+**/backend/node_modules/iconv-lite/README.md
+**/backend/node_modules/iconv-lite/encodings
+**/backend/node_modules/iconv-lite/encodings/*.js
+**/backend/node_modules/iconv-lite/encodings/*.json
+**/backend/node_modules/iconv-lite/encodings/*.txt
