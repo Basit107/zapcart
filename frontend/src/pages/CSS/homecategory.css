@@ -1,0 +1,93 @@
+/* Main container for the HomeCategory component */
+.home-category {
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+/* Styling for the banner image */
+.home-category-banner {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+/* Container for sorting and index display */
+.homeCategory-indexSort {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 16px;
+    color: #555;
+}
+
+.homeCategory-indexSort p {
+    margin: 0;
+}
+
+.homeCategory-indexSort span {
+    font-weight: bold;
+    color: #333;
+}
+
+/* Sort by section styling */
+.homeCategory-sort {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: bold;
+    color: #333;
+}
+
+.homeCategory-sort img {
+    width: 16px;
+    height: auto;
+    margin-left: 10px;
+}
+
+/* Container for the products */
+.homecategory-products {
+    /* display: flex;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); Responsive grid */
+    columns: 300px;
+    gap: 30px; /* Space between product items */
+    justify-items: center;
+    padding: 30px;
+    padding-top: 23px;
+}
+
+.item {
+    padding-bottom: 21px;
+    padding-top: 30px;
+}
+
+.homeCategory-loadmore {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 150px auto;
+    width: 233px;
+    height: 69px;
+    border-radius: 75px;
+    background-color: #ededed;
+    color: #787878;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .homeCategory-indexSort {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .homeCategory-sort {
+        margin-top: 10px;
+    }
+
+    .homecategory-products {
+        grid-template-columns: 1fr; /* Single column on smaller screens */
+    }
+}

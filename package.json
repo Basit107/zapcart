@@ -7,7 +7,10 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "dev": "nodemon backend/server.js"
+    "dev:backend": "nodemon backend/server.js",
+    "dev:frontend": "vite --config frontend/vite.config.js",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "start": "node backend/server.js"
   },
   "type": "module",
   "keywords": [],
@@ -35,9 +38,10 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.15.0",
+    "multer": "^2.0.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-router-dom": "^6.18.0",
+    "react-router-dom": "^6.30.1",
     "stripe": "^18.1.1"
   }
 }

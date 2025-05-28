@@ -1,0 +1,52 @@
+/* Main container for the Related Products section */
+.relatedproducts {
+    padding: 40px 20px;
+    background-color: #f9f9f9;
+    text-align: center;
+    margin-top: 50px;
+}
+
+/* Heading for Related Products */
+.relatedproducts h1 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+/* Styling for the <hr> line under the heading */
+.relatedproducts hr {
+    width: 100px;
+    height: 2px;
+    background-color: #007bff; /* Blue color for line */
+    border: none;
+    margin: 10px auto;
+}
+
+/* Container for the product items */
+.relatedproducts-item {
+    display: flex;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive grid */
+    gap: 20px;
+    padding: 20px 0;
+}
+
+/* Individual item styling (delegated to Item component) */
+.relatedproducts-item .item {
+    border: 1px solid #ddd;
+    padding: 15px;
+    background-color: white;
+    transition: box-shadow 0.3s ease;
+}
+
+/* Hover effect for each item */
+.relatedproducts-item .item:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+    .relatedproducts-item {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Smaller columns */
+    }
+}

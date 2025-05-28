@@ -1,0 +1,132 @@
+/* Main product display container */
+.product-display {
+    display: flex;
+    padding: 20px;
+    background-color: #f8f8f8;
+}
+
+/* Left side of the product display */
+.productDisplay-left {
+    display: flex;
+    flex: 1;
+    margin-right: 20px;
+    gap: 17px;
+}
+
+/* Image list for thumbnails */
+.productDisplay-image-list {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    gap: 16px;
+    flex-direction: column;
+}
+
+/* Styling for each thumbnail image */
+.productDisplay-image-list img {
+    width: 80px;
+    height: 160px;
+    object-fit: cover;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+
+.productDisplay-image-list img:hover {
+    border-color: #007bff;
+}
+
+/* Main product image */
+.productDisplay-image {
+    text-align: center;
+}
+
+.productDisplay-main-image {
+    width: 400px;
+    padding: 40px;
+    height: 450px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Right side of the product display */
+.productDisplay-right {
+    flex: 2;
+    margin-left: 20px;
+}
+
+/* Product name styling */
+.productDisplay-right h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Star rating section */
+.productDisplay-right-star {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.productDisplay-right-star img {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+}
+
+/* Prices styling */
+.productDisplay-right-prices {
+    margin: 20px 0;
+}
+
+.productDisplay-right-old-price {
+    text-decoration: line-through;
+    color: #888;
+    font-size: 18px;
+}
+
+.productDisplay-right-new-price {
+    font-size: 24px;
+    color: #d9534f; /* Bootstrap danger color */
+    font-weight: bold;
+}
+
+/* Product description styling */
+.productDisplay-right-description {
+    margin: 10px 0;
+    color: #555;
+    font-size: 16px;
+}
+
+/* Add to cart button */
+.productDisplay-right button {
+    background-color: #28a745; /* Bootstrap success color */
+    color: white;
+    border: none;
+    padding: 18px 20px;
+    width: max-content;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-left: 26px;
+}
+
+.productDisplay-right button:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+/* Category styling */
+.productDisplay-right-category {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+}
+
+.productDisplay-right-category span {
+    font-weight: bold;
+}
+
+/* Video after 3:01:20 time stamp. make website responsive by adding media css  */

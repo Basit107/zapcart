@@ -1,0 +1,182 @@
+/* General styling for the footer section */
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #e8dcdc;
+    color: black;
+    padding: 20px 40px;
+    border-top: 5px solid black;
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+
+/* Styling for the logo and text in the footer */
+.footer-logo {
+    display: flex;
+    align-items: center;
+}
+
+.footer-logo img {
+    width: 40px;
+    height: auto;
+    margin-right: 10px;
+}
+
+.footer-logo p {
+    font-size: 24px;
+    font-weight: bold;
+    color: black;
+}
+
+/* Styling for the footer links */
+.footer-links {
+    flex-direction: row;
+    list-style-type: none;
+    display: flex;
+    gap: 20px;
+}
+
+.footer-links li {
+    /* flex-direction: row; */
+    cursor: pointer;
+    font-size: 18px;
+    color: black;
+    transition: color 0.3s ease;
+}
+
+.footer-links li:hover {
+    color: #ff4d4f;
+}
+
+/* Styling for social icons */
+.footer-social-icon {
+    display: flex;
+    gap: 20;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+.footer-social-icons-container {
+    justify-content: space-between;
+    gap: 20px;
+    margin: 4px;
+}
+
+.footer-social-icons-container img {
+    align-items: center;
+    width: 30px;
+    height: auto;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    margin: 15px;
+}
+
+.footer-social-icons-container img:hover {
+    transform: scale(1.2); /* Slight zoom on hover */
+}
+
+
+/* Copyright section */
+.copyright {
+    margin-bottom: 30px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.copyright hr {
+    border: none;
+    border-top: 4px solid #444;
+    margin-bottom: 10px;
+    width: 1100px;
+}
+
+.copyright p {
+    font-size: 16px;
+    color: black;
+}
+
+/* Responsive styling for tablets */
+@media (max-width: 768px) {
+    .footer {
+        align-items: center;
+        padding: 20px;
+        gap: 20px;
+    }
+
+    .footer-logo {
+        margin-bottom: 10px;
+    }
+
+    .footer-links {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .footer-links li {
+        font-size: 16px;
+        margin: 5px 0;
+    }
+
+    .footer-social-icons-container {
+        justify-content: center;
+    }
+
+    .footer-social-icon img {
+        width: 25px;
+    }
+
+    .copyright hr {
+        width: 690px;
+    }
+
+    .copyright p {
+        font-size: 14px;
+    }
+}
+
+/* Responsive styling for mobile screens */
+@media (max-width: 600px) {
+    .footer {
+        padding: 15px;
+        align-items: center;
+    }
+
+    .footer-logo img {
+        width: 35px;
+    }
+
+    .footer-logo p {
+        font-size: 20px;
+    }
+
+    .footer-links {
+        flex-direction: row;
+        gap: 10px;
+        font-size: 14px;
+    }
+
+    .footer-links li {
+        font-size: 14px;
+    }
+
+    .footer-social-icons-container {
+        display: flex;
+        flex-direction: row;
+        margin-top: 15px;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .footer-social-icon img {
+        width: 20px;
+    }
+
+    .copyright p {
+        font-size: 12px;
+    }
+
+    .copyright hr {
+        width: 500px;
+    }
+}

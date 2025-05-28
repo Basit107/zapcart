@@ -1,0 +1,27 @@
+/* breadcrums container */
+.breadcrums {
+    display: flex;
+    align-items: center;
+    font-size: 16px; /* Font size for the breadcrums */
+    color: #555; /* Text color */
+    padding: 23px; /* Top and bottom padding */
+    background-color: #f8f8f8; /* Light background color */
+}
+
+/* Arrow icon styling */
+.breadcrums img {
+    width: 15px; /* Width of the arrow icon */
+    height: auto; /* Maintain aspect ratio */
+    margin: 0 10px; /* Space between text and icon */
+}
+
+/* Style for individual breadcrumb items */
+.breadcrums span {
+    margin: 0 5px; /* Margin between breadcrumb items */
+}
+
+/* Optional: Add hover effect to breadcrumb items */
+.breadcrums span:hover {
+    text-decoration: underline; /* Underline on hover */
+    cursor: pointer; /* Pointer cursor for better UX */
+}

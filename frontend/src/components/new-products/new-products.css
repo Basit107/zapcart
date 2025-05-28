@@ -1,0 +1,114 @@
+/* General styling for the new products section */
+.new-products {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding-left: 40px;
+    padding-right: 40px;
+    align-items: center;
+    background-color: #f9f9f9;
+    margin: 20px 0;
+    border-radius: 10px;
+}
+
+.new-products h1 {
+    font-size: 36px;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.new-products hr {
+    width: 200px;
+    border: 2px solid #333;
+    margin: 0 auto 30px;
+}
+
+/* Grid layout for new products */
+.products {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; /* Responsive grid */
+    gap: 30px; /* Space between product items */
+    justify-items: center;
+    padding: 40px 40px 40px 40px;
+}
+
+/* Item component styling */
+.item {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+    max-width: 250px;
+    text-align: left;
+}
+
+.item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Image styling for the product */
+.item img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+/* Product name */
+.item h3 {
+    font-size: 18px;
+    color: #333;
+    margin-top: 15px;
+    padding-top: 30px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+/* Price styling */
+.item .price {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.item .new-price {
+    color: #ff4d4f;
+    font-weight: bold;
+}
+
+.item .old-price {
+    text-decoration: line-through;
+    color: #999;
+}
+
+/* Responsive design */
+@media (max-width: 800px) {
+    .products {
+        display: block;
+        columns: 130px; /* Single column layout for smaller screens */
+        padding: 14px;
+        gap: 60px;
+    }
+
+    .item {
+        max-width: 250px;
+        margin: 20px;
+    }
+}
+/* Media query for smaller screens */
+@media (max-width: 600px) {
+    .products {
+        grid-template-columns: 1fr; /* Single column layout for very small screens */
+        padding: 20px;
+    }
+
+    .item {
+        max-width: 100%; /* Full width for items on small screens */
+    }
+}
