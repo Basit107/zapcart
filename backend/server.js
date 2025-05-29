@@ -5,22 +5,27 @@ import multer from "multer";
 import cors from 'cors';
 import path from "path";
 
+// Importing Routers
 import userRouter from "./routes/users.routes.js";
 import authRouter from "./routes/auth.routes.js";
 import productRouter from "./routes/products.routes.js";
-
-import {PORT, DB_URI, SECRET_SAULT} from './config/env.js';
 import Users from "./models/user.models.js";
 import Product from "./models/product.models.js";
 
+// Importing Environment Variables
+import {PORT, SECRET_SAULT} from './config/env.js';
+
 // Importing Database
 import connectToMongoDB from "./database/mongodb.js";
+import cookieParser from "cookie-parser";
 
 const port = 4500;
 
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
+app.use(express.urlencoded({extended:false}));
 app.use(cors());
 
 app.use('/api/v1/users', userRouter);
@@ -46,7 +51,7 @@ const storage = multer.diskStorage({
 const upload = multer({storage:storage})
 
 
-//  Creatintg Upload Endpoint for Images.
+//  Creating Upload Endpoint for Images.
 app.use('/images', express.static('upload/images'))
 
 app.post("/upload", upload.single('product'), (request, response) => {
@@ -87,92 +92,25 @@ app.post('/addproduct', async (request, response) => {
     name: request.body.name,
   })
 })
-// Importing User Model
-
-
-//  Creating End Point to Register User
-app.post('/signup', async (request, response) => {
-
-  let check = await Users.findOne({email:request.body.email});
-
-  if (check) {
-    return response.status(400)
-    .json({success:false, errors:"Existing User Found with the same Email Address Found."})
-  }
-
-  let cart = {};
-  for (let i = 0; i < 300; i++) {
-    cart[i] = 0;    
-  }
-
-  const user = new Users({
-    name:request.body.username,
-    email:request.body.email,
-    password:request.body.password,
-    cartData:cart,
-  });
-
-  await user.save();
-
-  const data = {
-    user: {
-      id:user.id
-    }
-  }
-
-  const token = jwt.sign(data, SECRET_SAULT);
-  response.json({success:true, token});
-
-})
-
-
-// End Point For User Login
-app.post('/login', async (request, response) => {
-  let user = await Users.findOne({email:request.body.email});
-
-  if (user) {
-    const passwordCompare = request.body.password === user.password;
-
-    if (passwordCompare) {
-      const data = {
-        user: {
-          id:user.id
-        }
-      }
-
-      const token = jwt.sign(data, SECRET_SAULT);
-      response.json({success:true, token});
-    }
-
-    else {
-      response.json({success:false, errors:"Wrong Password Or Email Address"});
-    }
-  }
-
-  else {
-    response.json({success:false, errors: "Wrong password Or Email Address"});
-  }
-})
-
 
 
 // Creating middleware to fetch user
-    const fetchUser = async (request, response, next) => {
-      const token = request.header('auth-token');
+const fetchUser = async (request, response, next) => {
+  const token = request.header('auth-token');
 
-      if (!token) {
-        response.status(401).send({errors:"Please authenticate using valid token. Login/signup first."})
-      }
-      else {
-        try {
-          const data = jwt.verify(token, SECRET_SAULT);
-          request.user = data.user;
-          next();
-        } catch (error) {
-            response.status(401).send({errors: "Please Autheticate using a Valid Token"})
-        }
-      }
+  if (!token) {
+    response.status(401).send({errors:"Please authenticate using valid token. Login/signup first."})
+  }
+  else {
+    try {
+      const data = jwt.verify(token, SECRET_SAULT);
+      request.user = data.user;
+      next();
+    } catch (error) {
+        response.status(401).send({errors: "Please Autheticate using a Valid Token"})
     }
+  }
+}
 
 
 // Creating End Point for adding products in cartdata
