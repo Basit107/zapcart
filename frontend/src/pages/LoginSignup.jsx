@@ -19,22 +19,23 @@ const LoginSignUp = () => {
         console.log("login Function Executed: ", formData);
 
         let responseData;
-        await fetch('http://localhost:4000/login', {
+        await fetch('http://localhost:5000/api/v1/auth/signin', {
             method: 'POST',
             headers: {
-                Accept: 'application/form-data',
                 'Content-Type': 'application/json',
+                Accept: 'application/form-data',
             },
             body: JSON.stringify(formData),
         }).then((response) => response.json()).then((data) => responseData=data)
         
         if (responseData.success) {
-            localStorage.setItem('auth-token', responseData.token);
+            localStorage.setItem('auth-token', responseData.data.token);
+            localStorage.setItem('user-id', responseData.data.user._id);
             window.location.replace("/");
         }
 
         else {
-            alert(responseData.errors)
+            alert(responseData.message)
         }
     }
 
@@ -43,17 +44,19 @@ const LoginSignUp = () => {
         console.log("Sign Up Function Executed: ", formData);
 
         let responseData;
-        await fetch('http://localhost:4000/signup', {
+        await fetch('http://localhost:5000/api/v1/auth/signup', {
             method: 'POST',
             headers: {
-                Accept: 'application/form-data',
                 'Content-Type': 'application/json',
+                Accept: 'application/form-data',
+                'Access-Control-Allow-Origin': '*',
             },
             body: JSON.stringify(formData),
         }).then((response) => response.json()).then((data) => responseData=data)
         
         if (responseData.success) {
-            localStorage.setItem('auth-token', responseData.token);
+            localStorage.setItem('auth-token', responseData.data.token);
+            localStorage.setItem('user-id', responseData.data.user._id);
             window.location.replace("/");
         }
 
@@ -72,7 +75,7 @@ const LoginSignUp = () => {
                     <input name='email' value={formData.email} onChange={changeHandler} type="email" placeholder='Email Address' />
                     <input name='password' value={formData.password} onChange={changeHandler} type="password" placeholder='Password' />
                 </div>
-                <button on onClick={() => {state === "Login"? login():signup()}}>Continue</button>
+                <button onClick={() => {state === "Login"? login():signup()}}>Continue</button>
                 {state === "Sign Up"
                     ? <p className="loginsignup-login">Already have an Account? <span onClick={() => {setState("Login")}}> Then Login here</span></p>
                     : <p className="loginsignup-login">Don't have an Account? <span onClick={() => {setState("Sign Up")}}> Sign Up here</span></p>}

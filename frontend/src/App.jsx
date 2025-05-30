@@ -10,7 +10,7 @@ import Home from "./pages/Home";
 import Footer from './components/footer/Footer';
 import HomeCategory from './pages/HomeCategory';
 import banner1 from './components/assets/banner1.png';
-import LoginSignup from './pages/LoginSignUp';
+import LoginSignup from './pages/LoginSignup';
 
 
 function App() {

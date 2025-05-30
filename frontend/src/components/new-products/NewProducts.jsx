@@ -9,7 +9,7 @@ const NewProducts = () => {
     const [new_products, setNewProducts] = useState([]);
 
     useEffect(() => {
-        fetch(`http://localhost:5000/newproducts`)
+        fetch(`http://localhost:5000/api/v1/products/newproducts`)
         .then((response) => response.json()).then((data) => setNewProducts(data));
     }, [])
 

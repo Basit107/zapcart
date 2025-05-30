@@ -1,37 +1,44 @@
 // server.js
 import express from "express";
-import jwt from "jsonwebtoken";
-import multer from "multer";
-import cors from 'cors';
 import path from "path";
+
+// Importing Environment Variables
+import { PORT } from './config/env.js';
 
 // Importing Routers
 import userRouter from "./routes/users.routes.js";
 import authRouter from "./routes/auth.routes.js";
 import productRouter from "./routes/products.routes.js";
-import Users from "./models/user.models.js";
-import Product from "./models/product.models.js";
-
-// Importing Environment Variables
-import {PORT, SECRET_SAULT} from './config/env.js';
+import adminRouter from "./routes/admin.routes.js";
 
 // Importing Database
 import connectToMongoDB from "./database/mongodb.js";
+
+// Importing Middlewares
+import cors from 'cors';
+import errorMiddleware from "./middlewares/error.middlewares.js";
 import cookieParser from "cookie-parser";
+import arcjetMiddleware from "./middlewares/arcjet.middlewares.js";
+import { upload, staticUpload } from './middlewares/upload.middlewares.js';
 
 const port = 4500;
-
 const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({extended:false}));
 app.use(cors());
+app.use(arcjetMiddleware);
 
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/products', productRouter);
+app.use('/api/v1/admins/', adminRouter);
+app.use('/images', express.static('upload/images'))
 
+app.post("/upload", upload.single('product'), staticUpload);
+
+app.use(errorMiddleware);
 
 
 // API Creation
@@ -40,120 +47,7 @@ app.get("/", (request, response) => {
 })
 
 
-// Image Storage engine
-const storage = multer.diskStorage({
-  destination: './upload/images',
-  filename:(request, file, cb) => {
-    return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
-  }
-})
-
-const upload = multer({storage:storage})
-
-
 //  Creating Upload Endpoint for Images.
-app.use('/images', express.static('upload/images'))
-
-app.post("/upload", upload.single('product'), (request, response) => {
-  response.json({
-    success:1,
-    image_url:`http://localhost:${PORT}/images/${request.file.filename}`
-  })
-})
-
-
-app.post('/addproduct', async (request, response) => {
-  let products = await Product.find({});
-  let id;
-  if (products.length > 0) {
-    let last_product_array = products.slice(-1);
-    let last_product = last_product_array[0];
-    id = last_product.id + 1;
-  }
-  else {
-    id = 1;
-  }
-
-  const product = new Product({
-    id:id,
-    name:request.body.name,
-    image:request.body.image,
-    category:request.body.category,
-    new_price:request.body.new_price,
-    old_price:request.body.old_price,
-    available:request.body.available
-  });
-
-  console.log(product);
-  await product.save();
-  console.log("Product is Saved");
-  response.json({
-    success: true,
-    name: request.body.name,
-  })
-})
-
-
-// Creating middleware to fetch user
-const fetchUser = async (request, response, next) => {
-  const token = request.header('auth-token');
-
-  if (!token) {
-    response.status(401).send({errors:"Please authenticate using valid token. Login/signup first."})
-  }
-  else {
-    try {
-      const data = jwt.verify(token, SECRET_SAULT);
-      request.user = data.user;
-      next();
-    } catch (error) {
-        response.status(401).send({errors: "Please Autheticate using a Valid Token"})
-    }
-  }
-}
-
-
-// Creating End Point for adding products in cartdata
-app.post('/addtocart', fetchUser, async (request, response) => {
-
-  console.log("Product Added To Cart: ", request.body.itemId);
-
-  let userData = await Users.findOne({_id:request.user.id});
-  userData.cartData[request.body.itemId] =+ 1;
-
-  await Users.findOneAndUpdate({_id:request.user.id}, {cartData:userData.cartData});
-
-  response.send("Product Added To Cart")
-  
-})
-
-
-// Creating Endpoint to remove product from CartData
-app.post('/removefromcart', fetchUser, async (request, response) => {
-
-  console.log("Product Removed From Cart: ", request.body.itemId);
-  
-
-  let userData = await Users.findOne({_id:request.user.id});
-  
-  if (userData.cartData[request.body.itemId] > 0) {
-    userData.cartData[request.body.itemId] -= 1;
-    await Users.findOneAndUpdate({_id:request.user.id}, {cartData:userData.cartData});
-    response.send("Product Removed From Cart")
-  }
-})
-
-
-
-// Creating API endpoint To Get cartData.
-app.post('/getcart', fetchUser, async (request, response) => {
-  console.log("Cart Data Retrieved.");
-
-  let userData = await Users.findOne({_id:request.user.id});
-  response.json(userData.cartData);
-  
-})
-
 
 
 // Checks server runnung Or Not

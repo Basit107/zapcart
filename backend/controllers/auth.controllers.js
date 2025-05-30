@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import Users from '../models/user.models.js';
 import { SECRET_SAULT, JWT_EXPIRATION } from '../config/env.js';
+import Admins from '../models/admin.models.js';
 
 export const signUp = async (request, response, next) => {
     const session = await mongoose.startSession();
@@ -111,4 +112,101 @@ export const signIn = async (request, response, next) => {
 }
 
 export const signOut = async (request, response, next) => {
+}
+
+export const adminSignIn = async (request,response, next) => {
+    try {
+        const { email, password} = request.body;
+        if (!email || !password) {
+            return response.status(400).json({ message: 'All fields are required' });
+        }
+
+        // Find the admin by email
+        const admin = await Admins.findOne({ email });
+        if (!admin) {
+            return response.status(404).json({ message: 'Admin not found' });
+        }
+
+        // Check if the password matches
+        const isPasswordValid = await bcrypt.compare(password, admin.password);
+
+        if (!isPasswordValid) {
+            return response.status(401).json({ message: 'Invalid password' });
+        }
+
+        // If the admin is found and password matches, sign out logic can be implemented here
+        const token = jwt.sign({ userId: admin._id }, SECRET_SAULT, {
+            expiresIn: JWT_EXPIRATION })
+
+        response.status(200).json({
+            success: true,
+            message: 'Admin signed in successfully',
+            data: {
+                token,
+                admin
+            }
+        });
+    }
+    catch (error) {
+        next(error);
+    }
+}
+
+export const adminSignUp = async (request, response, next) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+        const {name, email, password} = request.body;
+        if (!name || !email || !password) {
+            return response.status(400).json({ message: 'All fields are required' });
+        }
+
+        let check = await Admins.findOne({email});
+        
+        if (check) {
+            return response.status(409) // Conflict
+            .json({success:false, 
+                errors:"Existing Admin with the same Email Address Found."
+            })
+        }
+
+        // Hash the password
+        const hash_salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, hash_salt);
+
+        // Create a new user
+        const newAdmin = new Admins({
+            name,
+            email,
+            password: hashedPassword
+        });
+
+        // Save the user to the database
+        await newAdmin.save({ session });
+
+        // Create a JWT token
+        const token = jwt.sign({ userId:newAdmin._id }, SECRET_SAULT, {
+            expiresIn: JWT_EXPIRATION
+        });
+
+        await session.commitTransaction();
+        session.endSession();
+
+        response.status(201).json({
+            success: true,
+            message: 'Admin created successfully',
+            token,
+            data: {
+                id: newAdmin._id,
+                name: newAdmin.name,
+                email: newAdmin.email
+            }
+        });
+    }
+    catch (error) {
+        await session.abortTransaction();
+        session.endSession();
+        next(error);
+    }
 }
