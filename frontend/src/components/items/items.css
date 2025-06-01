@@ -2,6 +2,8 @@
     width: 200px;
     padding: 25px;
     gap: 50px;
+    color: #374151;
+    font-size: 17px;
 }
 
 .item p{

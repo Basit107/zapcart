@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react'
 import './popular.css'
 // import data_product from '../assets/data';
 import Items from '../items/Items';
+import { PORT } from '../../../backend/config/env.js';
 
 const Popular = () => {
 
     const [popularProducts, setPopularProducts] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:5000/api/v1/products/popularproducts')
+        fetch(`http://localhost:${PORT}/api/v1/products/popularproducts`)
         .then((response) => response.json())
         .then((data) =>  setPopularProducts(data))
     }, [])

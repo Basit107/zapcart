@@ -1,5 +1,6 @@
 import React, {createContext, useEffect, useState} from "react";
 // import all_product from '../components/assets/all_product'
+// import { PORT } from "../../../backend/config/env.js";
 
 export const HomeContext = createContext(null);
 
@@ -19,12 +20,12 @@ const HomeContextProvider = (props)=> {
     const [cartItems, setCartItems] = useState(getDefaultCart());
 
     useEffect(() => {
-        fetch('http://localhost:5000/api/v1/products/allproducts')
+        fetch(`http://localhost:${PORT}/api/v1/products/allproducts`)
         .then((response) => response.json())
         .then((data) => setAll_Product(data))
 
         if (localStorage.getItem('auth-token')) {
-            fetch(`http://localhost:5000/api/v1/users/${localStorage.getItem('user-id')}/getcart`, {
+            fetch(`http://localhost:${PORT}/api/v1/users/${localStorage.getItem('user-id')}/getcart`, {
                 method: 'POST',
                 headers: {
                     Accept: 'application/form-data',
@@ -41,7 +42,7 @@ const HomeContextProvider = (props)=> {
         setCartItems((prev)=>({...prev,[itemId]:prev[itemId]+1}))
         
         if (localStorage.getItem('auth-token')) {
-            fetch(`http://localhost:5000/api/v1/users/${localStorage.getItem('user-id')}/addtocart`, {
+            fetch(`http://localhost:${PORT}/api/v1/users/${localStorage.getItem('user-id')}/addtocart`, {
                 method: 'POST',
                 headers: {
                     Accept: 'application/form-data',
@@ -60,7 +61,7 @@ const HomeContextProvider = (props)=> {
     const removeFromCart = (itemId) => {
         setCartItems((prev)=>({...prev,[itemId]:prev[itemId]-1}));
         if (localStorage.getItem('auth-token')) {
-            fetch(`http://localhost:5000/api/v1/users/${localStorage.getItem('user-id')}/removefromcart`, {
+            fetch(`http://localhost:${PORT}/api/v1/users/${localStorage.getItem('user-id')}/removefromcart`, {
                 method: 'POST',
                 headers: {
                     Accept: 'application/form-data',

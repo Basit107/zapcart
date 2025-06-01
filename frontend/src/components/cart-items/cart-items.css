@@ -1,5 +1,6 @@
 .cart-items {
     margin: 100px 180px;
+    color: black;
 }
 
 .cart-items hr {
@@ -106,6 +107,7 @@
     width: 280px;
     height: 40px;
     padding: 7px;
+    color: black;
 }
 
 .cart-items-promobox button {

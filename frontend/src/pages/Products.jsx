@@ -10,7 +10,11 @@ import RelatedProducts from '../components/related-products/RelatedProducts'
 const Products = () => {
     const {all_product} = useContext(HomeContext)
     const{productId} = useParams();
-    const product = all_product.find((e)=> e.id === Number(productId));  
+    const product = all_product.find((e)=> e.id === Number(productId));
+
+    if (!product) {
+        return <div>Loading product...</div>; // or redirect, or show error
+    }
 
     return (
         <div>
