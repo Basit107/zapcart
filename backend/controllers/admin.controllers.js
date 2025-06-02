@@ -8,7 +8,7 @@ export const addProduct = async (req, res, next) => {
     try {
         // Logic to add a product
         const { name, image, category, new_price, old_price, available } = req.body;
-        if (!name ||!image || !category || !new_price || !old_price || !available) {
+        if (!name ||!image || !category || !new_price || !old_price) {
             return res.status(400).json({ message: "All fields are required" });
         }
         let id;

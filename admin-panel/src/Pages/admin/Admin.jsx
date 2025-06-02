@@ -1,20 +1,26 @@
 import React from "react";
-// import "./admin.css";
-import Sidebar from "../../Components/sidebar/Sidebar";
+import Sidebar from "../../Components/Sidebar";
 import { Route, Routes } from "react-router-dom";
-import AddProduct from "../../Components/addproduct/AddProduct";
-import ListProduct from "../../Components/listproduct/ListProduct";
+import AddProduct from "../../Components/AddProduct";
+import ListProduct from "../../Components/ListProduct";
+import Navbar from "../../Components/Navbar";
+import { Navigate } from "react-router-dom";
 
 const Admin = () => {
+
   return (
-    <div className="d-flex" style={{ minHeight: "100vh" }}>
+    <div className="d-flex">
       <Sidebar />
-      <div className="flex-grow-1 p-4">
-        <Routes>
-          <Route path="/addproduct" element={<AddProduct />} />
-          <Route path="/listproduct" element={<ListProduct />} />
-        </Routes>
+      <div className=" gap-4">
+        <Navbar />
       </div>
+        <div className="flex-grow-1 p-lg-4 p-md-3 mt-4 mx-5">
+          <Routes>
+            <Route index element={<Navigate to="listproduct" />} />
+            <Route path='/addproduct' element={<AddProduct />} />
+            <Route path='/listproduct' element={<ListProduct />} />
+          </Routes>
+        </div>
     </div>
   );
 };

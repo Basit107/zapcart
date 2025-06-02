@@ -10,6 +10,7 @@ const AddProduct = () => {
     category: "mobile",
     new_price: "",
     old_price: "",
+    available: true,
   });
 
   const imageHandler = (e) => {
@@ -29,17 +30,22 @@ const AddProduct = () => {
 
     await fetch(`${API_BASE_URL}/api/v1/admins/upload`, {
       method: "POST",
-      headers: { Accept: "application/json" },
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('auth-token')}`,
+        Accept: "application/json",  // Include token for authentication
+      },
       body: formData,
     })
       .then((res) => res.json())
       .then((data) => (responseData = data));
 
     if (responseData.success) {
+      console.log("Image Uploaded Successfully: ", responseData.image_url);
       product.image = responseData.image_url;
-      await fetch(`${API_BASE_URL}/api/v1/admins/addproduct`, {
+      await fetch(`${API_BASE_URL}/api/v1/admins/add-product`, {
         method: "POST",
         headers: {
+          'Authorization': `Bearer ${localStorage.getItem('auth-token')}`,
           Accept: "application/json",
           "Content-Type": "application/json",
         },
@@ -50,7 +56,7 @@ const AddProduct = () => {
           data.success
             ? alert("Product Has Been Added")
             : alert("Failed To Add Product")
-        );
+        );  
     }
   };
 

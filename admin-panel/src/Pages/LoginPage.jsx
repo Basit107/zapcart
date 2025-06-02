@@ -1,13 +1,18 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { LogIn, Mail, Lock, Loader } from "lucide-react";
+import { div } from "framer-motion/client";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const LoginPage = () => {
 	const [formData, setFormData] = useState({ email: "", password: "" });
 	const [loading, setLoading] = useState(false);
 
-	const { email, password } = formData;
+  const navigate = useNavigate();
+  const { setIsAuthenticated } = useAuth(); // from AuthContext
+
 	const setEmail = (value) => setFormData({ ...formData, email: value });
 	const setPassword = (value) => setFormData({ ...formData, password: value });
 
@@ -21,7 +26,7 @@ const LoginPage = () => {
 		console.log("login Function Executed: ", formData);
 
 		let responseData;
-		await fetch(`${API_BASE_URL}/api/v1/auth/signin`, {
+		await fetch(`${API_BASE_URL}/api/v1/auth/admin/signin`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -34,101 +39,88 @@ const LoginPage = () => {
 
 		if (responseData.success) {
 			localStorage.setItem('auth-token', responseData.data.token);
-			localStorage.setItem('user-id', responseData.data.user._id);
-			window.location.replace("/");
+			localStorage.setItem('user-id', responseData.data.admin._id);
+			setIsAuthenticated(true); // from AuthContext
+      navigate("/admin");
 		} else {
 			alert(responseData.message);
 		}
 	};
 
 	return (
-		<div className="container-lg d-flex align-middle justify-content-center" style={{ minHeight: "100vh" }}>
-			<motion.div
-				initial={{ opacity: 0, y: -20 }}
-				animate={{ opacity: 1, y: 0 }}
-				transition={{ duration: 0.8 }}
-				className="text-center mb-3"
-			>
-				<h2 className="text-success">Login to your account</h2>
-			</motion.div>
-
-			<motion.div
-				initial={{ opacity: 0, y: 20 }}
-				animate={{ opacity: 1, y: 0 }}
-				transition={{ duration: 0.8, delay: 0.2 }}
-				className="d-flex justify-content-center align-items-center vh-100"
-			>
-				<div className="col-xl-12 container-lg justify-content-center mx-lg-3">
-					<div className="card bg-dark text-light">
-						<div className="card-body p--4">
-							<form onSubmit={handleSubmit}>
-								<div className="mb-3">
-									<label htmlFor="email" className="form-label">Email address</label>
-									<div className="input-group">
-										<span className="input-group-text bg-secondary border-secondary text-light">
-											<Mail size={16} />
-										</span>
-										<input
-											id="email"
-											type="email"
-											required
-											value={email}
-											onChange={(e) => setEmail(e.target.value)}
-											className="form-control bg-light text-dark border-secondary"
-											placeholder="you@example.com"
-										/>
-									</div>
-								</div>
-
-								<div className="mb-3">
-									<label htmlFor="password" className="form-label">Password</label>
-									<div className="input-group">
-										<span className="input-group-text bg-secondary border-secondary text-light">
-											<Lock size={16} />
-										</span>
-										<input
-											id="password"
-											type="password"
-											required
-											value={password}
-											onChange={(e) => setPassword(e.target.value)}
-											className="form-control bg-light text-dark border-secondary"
-											placeholder="••••••••"
-										/>
-									</div>
-								</div>
-
-								<button
-									type="submit"
-									className="btn btn-success w-100 d-flex align-items-center justify-content-center"
-									disabled={loading}
-								>
-									{loading ? (
-										<>
-											<Loader className="me-2 spinner-border spinner-border-sm" />
-											Loading...
-										</>
-									) : (
-										<>
-											<LogIn className="me-2" />
-											Login
-										</>
-									)}
-								</button>
-							</form>
-
-							<p className="text-center text-light mt-3">
-								Don't have an account?{" "}
-								<span className="text-info" style={{ cursor: "pointer" }}>
-									{/* Link component can be added back when signup is ready */}
-									Sign up
-								</span>
-							</p>
-						</div>
-					</div>
-				</div>
-			</motion.div>
-		</div>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <section className="py-3 py-md-5 py-xl-8">
+        <div className="container">
+          <div className="row gy-4 align-items-center">
+            <div className="col-12 col-md-6 col-xl-6">
+            </div>
+              <div className="col-12 col-md-6 col-xl-6">
+                <div className="card border-0 rounded-4 shadow-lg">
+                  <div className="card-body p-3 p-md-4 p-xl-5">
+                    <div className="row">
+                      <div className="col-12">
+                        <div className="mb-4">
+                          <h3>Sign in</h3>
+                          <p className="text-secondary">Enter your credentials to access your account.</p>
+                        </div>
+                      </div>
+                    </div>
+                    <form onSubmit={handleSubmit}>
+                      <div className="row gy-3 overflow-hidden">
+                        <div className="col-12">
+                          <div className="form-floating mb-3">
+                            <input type="email" className="form-control" 
+                              name="email" id="email" 
+                              placeholder="name@example.com" value={formData.email}
+                              onChange={(e) => setEmail(e.target.value)} required />
+                              <label htmlFor="email" className="form-label"> 
+                                <Mail className="" size={20}/>
+                                Email</label>
+                          </div>
+                        </div>
+                        <div className="col-12">
+                          <div className="form-floating mb-3">
+                            <input type="password" className="form-control" 
+                              name="password" id="password" 
+                              placeholder="Password" value={formData.password}
+                              onChange={(e) => setPassword(e.target.value)} required />
+                              <label htmlFor="password" className="form-label"> 
+                                <Lock className="" size={20}/>
+                                Password</label>
+                          </div>
+                        </div>
+                        <div className="col-12">
+                          <div className="form-check">
+                            <input className="form-check-input" type="checkbox" value="" name="remember_me" id="remember_me" />
+                              <label className="form-check-label text-secondary" htmlFor="remember_me">
+                                Keep me logged in
+                              </label>
+                          </div>
+                        </div>
+                        <div className="col-12">
+                          <div className="d-grid">
+                            <button className="btn btn-primary btn-lg" type="submit" disabled={loading}>
+                              <LogIn className="me-2" size={20} />
+                              Sign In
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                    <div className="row">
+                      <div className="col-12">
+                        <div className="d-flex gap-2 gap-md-4 flex-column flex-md-row justify-content-md-end mt-4">
+                          <a href="#!">Forgot password</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </section>
+    </div>
 	);
 };
 
