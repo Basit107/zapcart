@@ -2,16 +2,17 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { LogIn, Mail, Lock, Loader } from "lucide-react";
 import { div } from "framer-motion/client";
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import api from "../config/axios.js";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { set } from "mongoose";
 
 const LoginPage = () => {
 	const [formData, setFormData] = useState({ email: "", password: "" });
 	const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
-  const { setIsAuthenticated } = useAuth(); // from AuthContext
+  const { setIsAuthenticated, setUser } = useAuth(); // from AuthContext
 
 	const setEmail = (value) => setFormData({ ...formData, email: value });
 	const setPassword = (value) => setFormData({ ...formData, password: value });
@@ -25,25 +26,15 @@ const LoginPage = () => {
 	const login = async () => {
 		console.log("login Function Executed: ", formData);
 
-		let responseData;
-		await fetch(`${API_BASE_URL}/api/v1/auth/admin/signin`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				Accept: 'application/form-data',
-			},
-			body: JSON.stringify(formData),
-		})
-			.then((response) => response.json())
-			.then((data) => responseData = data);
+		const response = await api.post("/v1/auth/admin/signin", formData);
 
-		if (responseData.success) {
-			localStorage.setItem('auth-token', responseData.data.token);
-			localStorage.setItem('user-id', responseData.data.admin._id);
+		if (response.data.success) {
+      console.log("Login Successful: ", response.data);
 			setIsAuthenticated(true); // from AuthContext
+      setUser(response.data.data.admin); // from AuthContext
       navigate("/admin");
 		} else {
-			alert(responseData.message);
+			alert(response.data.message);
 		}
 	};
 

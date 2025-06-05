@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import upload_area from "../../assets/upload_area.svg";
+import upload_area from "../assets/upload_area.svg";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import api from "../config/axios.js";
 
 const AddProduct = () => {
   const [image, setImage] = useState(false);
@@ -22,36 +23,18 @@ const AddProduct = () => {
   };
 
   const Add_Product = async () => {
-    let responseData;
     let product = productDetails;
 
     let formData = new FormData();
     formData.append("product", image);
 
-    await fetch(`${API_BASE_URL}/api/v1/admins/upload`, {
-      method: "POST",
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('auth-token')}`,
-        Accept: "application/json",  // Include token for authentication
-      },
-      body: formData,
-    })
-      .then((res) => res.json())
-      .then((data) => (responseData = data));
+    const res = await api.post("v1/admins/upload", formData)
 
-    if (responseData.success) {
-      console.log("Image Uploaded Successfully: ", responseData.image_url);
-      product.image = responseData.image_url;
-      await fetch(`${API_BASE_URL}/api/v1/admins/add-product`, {
-        method: "POST",
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('auth-token')}`,
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(product),
-      })
-        .then((res) => res.json())
+    if (res.data.success) {
+      console.log("Image Uploaded Successfully: ", res.data.image_url);
+      product.image = res.data.image_url;
+      await api.post("v1/admins/add-product", product)
+        .then((res) => res.data)
         .then((data) =>
           data.success
             ? alert("Product Has Been Added")

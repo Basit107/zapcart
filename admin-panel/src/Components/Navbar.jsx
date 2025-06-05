@@ -1,5 +1,5 @@
 import React from "react";
-import navlogo from "../../assets/nav-logo.svg";
+import navlogo from "../assets/nav-logo.svg";
 import { ArrowBigDown, CircleUserRoundIcon } from "lucide-react";
 
 const Navbar = () => {

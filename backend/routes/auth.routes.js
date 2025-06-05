@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { signIn, signUp, signOut, adminSignUp, adminSignIn, getUserProfile } from "../controllers/auth.controllers.js";
+import { signIn, signUp, signOut, adminSignUp, adminSignIn, getUserProfile, getAdminProfile } from "../controllers/auth.controllers.js";
 
 const authRouter = Router();
 
@@ -8,6 +8,7 @@ authRouter.get("/", (req, res) => {
 });
 
 authRouter.get("/me", getUserProfile);
+authRouter.get("/admin/profile", getAdminProfile);
 
 authRouter.post("/signin", signIn)
 authRouter.post("/signup", signUp)

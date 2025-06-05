@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
-import cross_icon from "../../assets/cross_icon.png";
+import cross_icon from "../assets/cross_icon.png";
 import api from "../config/axios.js"
+import ProductUpdateModal from "./modals/ProductUpdateModal.jsx";
 
 const ListProduct = () => {
   const [allproducts, setAllProducts] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+
 
   const fetchInfo = async () => {
-    await fetch(`${API_BASE_URL}/api/v1/products/allproducts`)
-      .then((response) => response.json())
-      .then((data) => setAllProducts(data));
+    const res = await api.get("v1/products/allproducts");
+    setAllProducts(res.data);
   };
 
   useEffect(() => {
@@ -56,7 +59,15 @@ const ListProduct = () => {
                     style={{ height: "50px", objectFit: "contain" }}
                   />
                 </td>
-                <td>{product.name}</td>
+                <td 
+                  style={{ cursor: "pointer", color: "#0d6efd", textDecoration: "underline" }}
+                  onClick={() => {
+                    setSelectedProduct(product);
+                    setShowModal(true);
+                  }}
+                >
+                  {product.name}
+                </td>
                 <td>${product.old_price}</td>
                 <td>${product.new_price}</td>
                 <td>{product.category}</td>
@@ -73,6 +84,19 @@ const ListProduct = () => {
           </tbody>
         </table>
       </div>
+      {showModal && selectedProduct && (
+        <ProductUpdateModal
+          show={showModal}
+          handleClose={() => setShowModal(false)}
+          product={selectedProduct}
+          refreshProducts={fetchInfo} // So the table updates after edit
+        />
+      )}
+      {allproducts.length === 0 && (
+        <div className="text-center mt-4">
+          <p>No products available.</p>
+        </div>
+      )}
     </div>
   );
 };

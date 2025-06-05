@@ -33,6 +33,28 @@ export const getUserProfile = async (req, res) => {
     }
 };
 
+export const getAdminProfile = async (req, res) => {
+    const token = req.cookies.token;
+    try {
+        if(!token) return res.status(401).json({ message: 'Unauthorized' });
+        const decoded = jwt.verify(token, SECRET_SAULT);
+        req.userId = decoded.userId;
+        const admin = await Admins.findById(decoded.userId).select('-password -__v');
+        if(!admin) return res.status(401).json({ message: 'Unauthorized' });
+        req.admin = admin;
+
+        res.status(200).json({
+            success: true,
+            message: 'Admin profile fetched successfully',
+            data: {
+                admin
+            }
+        });
+    } catch (error) {
+        res.status(401).json({ message: 'Unauthorized', error: error.message });
+    }
+};
+
 export const signUp = async (request, response, next) => {
     const session = await mongoose.startSession();
     session.startTransaction();
@@ -185,7 +207,7 @@ export const adminSignIn = async (request,response, next) => {
         response.cookie('token', token, {
             httpOnly: true,
             secure: false, // Set to true if using HTTPS
-            sameSite: 'None',
+            sameSite: 'lax',
             maxAge: 24 * 60 * 60 * 1000
         });
 

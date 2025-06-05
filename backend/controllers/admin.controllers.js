@@ -1,5 +1,8 @@
 import Product from "../models/product.models.js";
 import mongoose from "mongoose";
+import fs from "fs";
+import path from "path";
+import paths  from "../config/path.js";
 
 export const addProduct = async (req, res, next) => {
     const session = await mongoose.startSession();
@@ -63,11 +66,23 @@ export const deleteProduct = async (req, res, next) => {
     session.startTransaction();
 
     try {
-        const { id } = req.params.id;
-        const product = await Product.findOneAndDelete({ id }).session(session);
+        const id  = req.params.id;
+        const product = await Product.findOneAndDelete({ id:id }).session(session);
         if (!product) {
             return res.status(404).json({ success: false, message: "Product not found" });
         }
+        // Delete the image file from the server
+        console.log("Deleting image:", product.image);
+        console.log("Image upload directory:", paths.imageUploadDir);
+        // Ensure the image path is correct
+        const baseName = path.basename(product.image)
+        const imagePath = path.join(paths.imageUploadDir, baseName);
+        console.log("Full image path:", imagePath);
+        // Check if the file exists before attempting to delete it
+        if (fs.existsSync(imagePath)) {
+            fs.unlinkSync(imagePath);
+        }
+        // Commit the transaction
         await session.commitTransaction();
         session.endSession();
 
@@ -95,7 +110,7 @@ export const updateProduct = async (req, res, next) => {
             return res.status(400).json({ message: "All fields are required" });
         }
 
-        const product = await Product.findOneAndUpdate({ id }, {
+        const product = await Product.findOneAndUpdate({ id:id }, {
             name,
             image,
             category,
