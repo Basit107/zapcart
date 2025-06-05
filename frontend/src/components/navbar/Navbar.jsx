@@ -4,12 +4,13 @@ import cart_icon from '../assets/cart_cross.png';
 import { Link } from 'react-router-dom';
 import { HomeContext } from '../../context/HomeContext';
 import dropdown_icon from '../assets/nav_dropdown.png';
-// import './bootstrap.min.css'; // optional if not globally included
+import {useAuth} from '../../context/AuthContext'
 
 const Navbar = () => {
     const [menu, setMenu] = useState("home");
     const { getTotalCartitems } = useContext(HomeContext);
     const menuRef = useRef();
+    const {isLoggedIn, logout} = useAuth();
 
     const dropdown_toggle = (e) => {
         menuRef.current.classList.toggle('d-flex');
@@ -55,15 +56,9 @@ const Navbar = () => {
                 </ul>
 
                 <div className="d-flex align-items-center gap-3">
-                    {localStorage.getItem('auth-token') ? (
-                        <button 
-                            className="btn btn-primary"
-                            onClick={() => {
-                                localStorage.removeItem('auth-token');
-                                window.location.replace('/');
-                            }}
-                        >
-                            Logout
+                    {isLoggedIn ? (
+                        <button className="btn btn-primary" onClick={logout}>
+                        Logout
                         </button>
                     ) : (
                         <Link to="/login" className="btn btn-primary">Login</Link>

@@ -1,8 +1,10 @@
 import React, {createContext, useEffect, useState} from "react";
 // import all_product from '../components/assets/all_product'
-// import { PORT } from "../../../backend/config/env.js";
+import api from '../config/axios';
+import {useAuth} from '../context/AuthContext';
 
 export const HomeContext = createContext(null);
+
 
 const getDefaultCart = () => {
     let cart = {}
@@ -18,69 +20,79 @@ const HomeContextProvider = (props)=> {
     
     const [all_product, setAll_Product] = useState([]);
     const [cartItems, setCartItems] = useState(getDefaultCart());
+    const {userId} = useAuth(); // ✅ Get userId from AuthContext
 
     useEffect(() => {
-        fetch(`http://localhost:${PORT}/api/v1/products/allproducts`)
-        .then((response) => response.json())
-        .then((data) => setAll_Product(data))
+        const fetchData = async () => {
+        try {
+            // ✅ Get all products
+            const productRes = await api.get('v1/products/allproducts');
+            setAll_Product(productRes.data);
 
-        if (localStorage.getItem('auth-token')) {
-            fetch(`http://localhost:${PORT}/api/v1/users/${localStorage.getItem('user-id')}/getcart`, {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/form-data',
-                    'auth-token': `${localStorage.getItem('auth-token')}`,
-                    'Content-Type': 'application/json',
-                },
-                body:"",
-            }).then((response) => response.json())
-            .then((data) => setCartItems(data))
-        }
-    }, [])
+            // ✅ Get user cart — backend uses cookie to identify user
+            if (!userId || userId === "") {
+                console.log('User ID is not available. Cannot add to cart.');
+                return;
+            } else {
+                const cartRes = await api.get(`v1/users/${userId}/getcart`); // no user-id or auth-token needed
+                setCartItems(cartRes.data.cartData);
+            }
+            console.log('Cart items:', cartItems);
 
-    const addToCart = (itemId) => {
-        setCartItems((prev)=>({...prev,[itemId]:prev[itemId]+1}))
-        
-        if (localStorage.getItem('auth-token')) {
-            fetch(`http://localhost:${PORT}/api/v1/users/${localStorage.getItem('user-id')}/addtocart`, {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/form-data',
-                    'auth-token': `${localStorage.getItem('auth-token')}`,
-                    'Content-Type': 'application/json',
-                },
-                body:JSON.stringify({"itemId": itemId})
-            })
-            .then((response) => response.json())
-            .then((data) => console.log(data)
-            )
+        } catch (error) {
+            console.error('Error fetching data:', error);
         }
-        
-    }
+        };
 
-    const removeFromCart = (itemId) => {
-        setCartItems((prev)=>({...prev,[itemId]:prev[itemId]-1}));
-        if (localStorage.getItem('auth-token')) {
-            fetch(`http://localhost:${PORT}/api/v1/users/${localStorage.getItem('user-id')}/removefromcart`, {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/form-data',
-                    'auth-token': `${localStorage.getItem('auth-token')}`,
-                    'Content-Type': 'application/json',
-                },
-                body:JSON.stringify({"itemId": itemId})
-            })
-            .then((response) => response.json())
-            .then((data) => console.log(data))
+        fetchData();
+    }, [userId]); // ✅ Dependency on userId
+
+
+    const addToCart = async (itemId) => {
+        setCartItems((prev) => ({
+            ...prev,
+            [itemId]: (prev[itemId] || 0) + 1,
+        }));
+
+        try {
+            if (!!userId) {
+                const res = await api.put(`v1/users/${userId}/addtocart`, { itemId });
+                console.log(res.data);
+            } else {
+                console.error('User ID is not available. Cannot add to cart.');
+                return;
+            }
+            
+        } catch (err) {
+            console.error('Error adding to cart:', err);
         }
-    }
+    };
+
+
+    const removeFromCart = async (itemId) => {
+        setCartItems((prev) => ({
+            ...prev,
+            [itemId]: prev[itemId] - 1,
+        }));
+
+        try {
+            const res = await api.post('v1/users/removefromcart', { itemId });
+            console.log(res.data);
+        } catch (err) {
+            console.error('Error removing from cart:', err);
+        }
+    };
 
     const getTotalCartAmount = () => {
         let totalAmount = 0;
         for (const item in cartItems) {
             if (cartItems[item] > 0) {
                 let iteminfo = all_product.find((product) => product.id === Number(item))
-                totalAmount += iteminfo.new_price * cartItems[item];
+                if (iteminfo) {
+                    totalAmount += iteminfo.new_price * cartItems[item];
+                } else {
+                    console.warn("Product not found for cart item id:", item);
+                }
             }
         }
         return totalAmount;

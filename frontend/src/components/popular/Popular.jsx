@@ -2,17 +2,24 @@ import React, { useEffect, useState } from 'react'
 import './popular.css'
 // import data_product from '../assets/data';
 import Items from '../items/Items';
-import { PORT } from '../../../backend/config/env.js';
+import api from '../../config/axios'; // Adjust the import path as necessary
 
 const Popular = () => {
 
     const [popularProducts, setPopularProducts] = useState([]);
 
     useEffect(() => {
-        fetch(`http://localhost:${PORT}/api/v1/products/popularproducts`)
-        .then((response) => response.json())
-        .then((data) =>  setPopularProducts(data))
-    }, [])
+    const fetchPopularProducts = async () => {
+      try {
+        const response = await api.get('/v1/products/popularproducts');
+        setPopularProducts(response.data);
+      } catch (error) {
+        console.error("Error fetching popular products:", error);
+      }
+    };
+
+    fetchPopularProducts();
+  }, []);
 
 
     return (

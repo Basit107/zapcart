@@ -37,7 +37,10 @@ export const getUser = async (request, response, next) => {
 
 export const getCartProducts = async (request, response, next) => {
     try {
-        let userData = await Users.findOne({_id:request.user.id});
+        let userData = await Users.findOne({_id:request.params.id}).select('cartData');
+        if (!userData) {
+            return response.status(404).json({ success: false, message: "User not found" });
+        }
         response.json({
             success: true,
             message: "Cart Data Retrieved Successfully.",
@@ -51,15 +54,18 @@ export const getCartProducts = async (request, response, next) => {
 
 export const addProductToCart = async (request, response, next) =>{
     try {
-        let userData = await Users.findOne({_id:request.user.id});
-          userData.cartData[request.body.itemId] =+ 1;
-        
-          await Users.findOneAndUpdate({_id:request.user.id}, {cartData:userData.cartData});
-        
-          response.send({
-            success: true,
-            message:"Product Added To Cart"
-          })
+        let userData = await Users.findOne({_id:request.params.id});
+        userData.cartData[request.body.itemId] = (userData.cartData[request.body.itemId] || 0) + 1;
+        if (!userData) {
+            return response.status(404).json({ success: false, message: "User not found" });
+        }
+        // Update the user's cart data in the database
+        await Users.findOneAndUpdate({_id:request.params.id}, {cartData:userData.cartData});
+
+        response.send({
+        success: true,
+        message:"Product Added To Cart"
+        })
     }
     catch (error) {
         next(error)

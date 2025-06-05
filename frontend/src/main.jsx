@@ -3,10 +3,14 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { PORT } from '../../backend/config/env.js';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import { AuthProvider } from './context/AuthContext'
+
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App />
+    <AuthProvider>
+      <App />
+    </AuthProvider>
   </StrictMode>,
 )

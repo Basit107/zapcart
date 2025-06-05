@@ -1,9 +1,14 @@
 import React, { useState } from 'react'
 import './CSS/loginsignup.css'
+import api from '../config/axios'
+import {useAuth} from '../context/AuthContext'
+import { useNavigate } from 'react-router-dom';
 
 const LoginSignUp = () => {
 
     const [state, setState] = useState("Login");
+    const {setUserId,setIsLoggedIn, setLoading} = useAuth();
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         username: "",
@@ -17,25 +22,28 @@ const LoginSignUp = () => {
 
     const login = async () => {
         console.log("login Function Executed: ", formData);
+        setLoading(true);
 
-        let responseData;
-        await fetch(`http://localhost:${PORT}/api/v1/auth/signin`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/form-data',
-            },
-            body: JSON.stringify(formData),
-        }).then((response) => response.json()).then((data) => responseData=data)
-        
-        if (responseData.success) {
-            localStorage.setItem('auth-token', responseData.data.token);
-            localStorage.setItem('user-id', responseData.data.user._id);
-            window.location.replace("/");
-        }
+        try {
+            const res = await api.post('v1/auth/signin', formData, {withCredentials: true}); // token sent via cookie
 
-        else {
-            alert(responseData.message)
+            if (res.status === 200 && res.data.success) {
+                // ✅ token is already in httpOnly cookie, no need for localStorage
+                setUserId(res.data.data.user._id)
+                setIsLoggedIn(true);
+                setLoading(false);  // ✅ Stop loading
+                navigate("/"); // Redirect to home page after successful login
+            } else {
+                alert(res.data.message);
+            }
+
+        } catch (err) {
+            console.error("Login error:", err);
+            setLoading(false);
+            // Handle error appropriately, e.g., show an alert or message
+            alert("Login failed. Please try again.");
+        } finally {
+            setLoading(false);  // ✅ Stop loading
         }
     }
 
@@ -43,25 +51,18 @@ const LoginSignUp = () => {
     const signup = async () => {
         console.log("Sign Up Function Executed: ", formData);
 
-        let responseData;
-        await fetch(`http://localhost:${PORT}/api/v1/auth/signup`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/form-data',
-                'Access-Control-Allow-Origin': '*',
-            },
-            body: JSON.stringify(formData),
-        }).then((response) => response.json()).then((data) => responseData=data)
-        
-        if (responseData.success) {
-            localStorage.setItem('auth-token', responseData.data.token);
-            localStorage.setItem('user-id', responseData.data.user._id);
-            window.location.replace("/");
-        }
+        try {
+            const res = await api.post('v1/auth/signup', formData); // token sent via cookie
 
-        else {
-            alert(responseData.errors)
+            if (res.data.success) {
+                // ✅ token is already in httpOnly cookie, no need for localStorage
+                window.location.replace("/login");
+            } else {
+                alert(res.data.message);
+            }
+        } catch (error) {
+            console.error("Sign Up error:", error);
+            alert("Sign Up failed. Please try again.");
         }
     }
 

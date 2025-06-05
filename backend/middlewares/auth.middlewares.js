@@ -9,15 +9,12 @@ import Admins from '../models/admin.models.js';
 
 export const authorizeUser = async (request, response, next) => {
   try {
-    let token;
-
-    if(request.headers.authorization && request.headers.authorization.startsWith('Bearer')) {
-      token = request.headers.authorization.split(' ')[1];
-    }
+    const token = request.cookies.token;
 
     if(!token) return response.status(401).json({ message: 'Unauthorized' });
 
     const decoded = jwt.verify(token, SECRET_SAULT);
+    request.userId = decoded.id
 
     const user = await Users.findById(decoded.userId);
 
@@ -33,15 +30,12 @@ export const authorizeUser = async (request, response, next) => {
 
 export const authorizeAdmin = async (request, response, next) => {
   try {
-    let token;
-
-    if(request.headers.authorization && request.headers.authorization.startsWith('Bearer')) {
-      token = request.headers.authorization.split(' ')[1];
-    }
+    const token = request.cookies.token;
 
     if(!token) return response.status(401).json({ message: 'Unauthorized' });
 
     const decoded = jwt.verify(token, SECRET_SAULT);
+    request.userId = decoded.id
 
     const admin = await Admins.findById(decoded.userId);
 

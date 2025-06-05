@@ -1,11 +1,13 @@
 import { Router } from "express";
-import { signIn, signUp, signOut, adminSignUp, adminSignIn } from "../controllers/auth.controllers.js";
+import { signIn, signUp, signOut, adminSignUp, adminSignIn, getUserProfile } from "../controllers/auth.controllers.js";
 
 const authRouter = Router();
 
 authRouter.get("/", (req, res) => {
   res.send("Auth route is working");
 });
+
+authRouter.get("/me", getUserProfile);
 
 authRouter.post("/signin", signIn)
 authRouter.post("/signup", signUp)

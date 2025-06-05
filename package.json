@@ -4,8 +4,8 @@
   "main": "backend/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "vite build",
-    "lint": "eslint .",
+    "build": "vite build --config frontend/vite.config.js",
+    "lint": "eslint  --config frontend/eslint.config.js",
     "preview": "vite preview",
     "dev:backend": "nodemon backend/server.js",
     "dev:frontend": "vite --config frontend/vite.config.js",
@@ -34,6 +34,7 @@
   "dependencies": {
     "@arcjet/inspect": "^1.0.0-beta.8",
     "@arcjet/node": "^1.0.0-beta.8",
+    "axios": "^1.9.0",
     "bcryptjs": "^3.0.2",
     "bootstrap": "^5.3.6",
     "cookie-parser": "^1.4.7",

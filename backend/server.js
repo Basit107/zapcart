@@ -18,9 +18,9 @@ import connectToMongoDB from "./database/mongodb.js";
 // Importing Middlewares
 import cors from 'cors';
 import errorMiddleware from "./middlewares/error.middlewares.js";
-import cookieParser from "cookie-parser";
 import arcjetMiddleware from "./middlewares/arcjet.middlewares.js";
-import { upload, staticUpload } from './middlewares/upload.middlewares.js';
+import cookieConfig from "./config/cookieConfig.js";
+import { corsOptions } from "./config/cors.js";
 
 const port = 4500;
 const app = express();
@@ -29,10 +29,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 app.use(express.json());
-app.use(cookieParser());
+cookieConfig(app);
 app.use(express.urlencoded({extended:false}));
-app.use(cors());
-app.use(arcjetMiddleware);
+app.use(cors(corsOptions));
+// app.use(arcjetMiddleware);
 
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/auth', authRouter);

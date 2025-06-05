@@ -5,6 +5,34 @@ import Users from '../models/user.models.js';
 import { SECRET_SAULT, JWT_EXPIRATION } from '../config/env.js';
 import Admins from '../models/admin.models.js';
 
+export const getUserProfile = async (req, res) => {
+    const token = req.cookies.token;
+
+    try {
+
+        if(!token) return res.status(401).json({ message: 'Unauthorized' });
+
+        const decoded = jwt.verify(token, SECRET_SAULT);
+        req.userId = decoded.id
+        const user = await Users.findById(decoded.userId).select('-password -__v');
+        if(!user) return res.status(401).json({ message: 'Unauthorized' });
+        req.user = user;
+
+        res.status(200).json({
+            success: true,
+            message: 'User profile fetched successfully',
+            data: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                cartData: user.cartData
+            }
+        });
+    } catch (error) {
+        res.status(401).json({ message: 'Unauthorized', error: error.message });
+    }
+};
+
 export const signUp = async (request, response, next) => {
     const session = await mongoose.startSession();
     session.startTransaction();
@@ -95,11 +123,18 @@ export const signIn = async (request, response, next) => {
         const token = jwt.sign({ userId: user._id }, SECRET_SAULT, {
             expiresIn: JWT_EXPIRATION })
 
+        
+        response.cookie('token', token, {
+            httpOnly: true,
+            secure: false, // Set to true if using HTTPS
+            sameSite: 'lax',
+            maxAge: 24 * 60 * 60 * 1000
+        });
+        // Set the cookie with the token
         response.status(200).json({
             success: true,
             message: 'User signed in successfully',
             data: {
-                token,
                 user
             }
         });
@@ -112,6 +147,15 @@ export const signIn = async (request, response, next) => {
 }
 
 export const signOut = async (request, response, next) => {
+    response.clearCookie("token", {
+    httpOnly: true,
+    secure: false, // Set to true if using HTTPS
+    sameSite: "lax",
+  });
+  response.status(200).json({
+    success: true,
+    message: "Logged out"
+  });
 }
 
 export const adminSignIn = async (request,response, next) => {
@@ -137,6 +181,13 @@ export const adminSignIn = async (request,response, next) => {
         // If the admin is found and password matches, sign out logic can be implemented here
         const token = jwt.sign({ userId: admin._id }, SECRET_SAULT, {
             expiresIn: JWT_EXPIRATION })
+        
+        response.cookie('token', token, {
+            httpOnly: true,
+            secure: false, // Set to true if using HTTPS
+            sameSite: 'None',
+            maxAge: 24 * 60 * 60 * 1000
+        });
 
         response.status(200).json({
             success: true,
@@ -209,4 +260,16 @@ export const adminSignUp = async (request, response, next) => {
         session.endSession();
         next(error);
     }
+}
+
+export const adminSignOut = async (request, response, next) => {
+    response.clearCookie("token", {
+        httpOnly: true,
+        secure: false, // Set to true if using HTTPS
+        sameSite: "none",
+    });
+    response.status(200).json({
+        success: true,
+        message: "Admin logged out"
+    });
 }

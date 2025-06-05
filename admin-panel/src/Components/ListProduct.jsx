@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import cross_icon from "../../assets/cross_icon.png";
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import api from "../config/axios.js"
 
 const ListProduct = () => {
   const [allproducts, setAllProducts] = useState([]);
@@ -16,16 +16,19 @@ const ListProduct = () => {
   }, []);
 
   const remove_product = async (id) => {
-    await fetch(`${API_BASE_URL}/api/v1/products/removeproduct`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id }),
-    });
+    try {
+      const res = await api.delete(`v1/admins/product/${id}`)
 
-    await fetchInfo();
+      if (res.status === 200 || res.status === 204) {
+        console.log('Product deleted successfully');
+        await fetchInfo(); // Refresh product list or data
+      } else {
+        console.warn('Unexpected response:', res.status, res.data);
+      }
+
+    } catch (error) {
+    console.error('Failed to delete product:', error.response?.data?.message || error.message);
+    }
   };
 
   return (

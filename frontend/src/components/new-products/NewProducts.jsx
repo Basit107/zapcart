@@ -2,16 +2,24 @@ import React, { useEffect, useState } from "react";
 import './new-products.css'
 // import new_collections from "../assets/new_collections";
 import Items from "../items/Items";
-
+import api from "../../config/axios";
 
 const NewProducts = () => {
 
     const [new_products, setNewProducts] = useState([]);
 
-    useEffect(() => {
-        fetch(`http://localhost:5000/api/v1/products/newproducts`)
-        .then((response) => response.json()).then((data) => setNewProducts(data));
-    }, [])
+   useEffect(() => {
+        const fetchNewProducts = async () => {
+            try {
+                const res = await api.get('v1/products/newproducts');
+                setNewProducts(res.data);
+            } 
+            catch (error) {
+                console.error('Error fetching new products:', error);
+            }
+        };
+        fetchNewProducts();
+    }, []);
 
     return (
         <div className="new-products">

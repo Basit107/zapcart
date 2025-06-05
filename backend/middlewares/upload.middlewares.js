@@ -1,7 +1,6 @@
 import multer from "multer";
 import path from "path";
 import { fileURLToPath } from 'url';
-import { dirname } from 'path';
 import { PORT } from '../config/env.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -14,7 +13,7 @@ export const storage = multer.diskStorage({
     } 
 });
 
-export const staticUpload = (req, res, next) => {
+export const staticUpload = (req, res) => {
     res.status(200).json({
     success: true,
     message: "Image uploaded successfully",
