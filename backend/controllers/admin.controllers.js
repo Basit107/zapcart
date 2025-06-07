@@ -3,6 +3,47 @@ import mongoose from "mongoose";
 import fs from "fs";
 import path from "path";
 import paths  from "../config/path.js";
+import cloudinary from "../config/cloudinary.js";
+
+export const cloudinaryUpload = async (req, res) => {
+    try {
+        const result = await cloudinary.uploader.upload(req.file.path, {
+            folder: "zapcart/products",
+            unique_filename: true,
+            resource_type: "image",
+            transformation: [{ width: 500, height: 750,
+                crop: 'fill',      // Ensures image fills the space
+                gravity: 'center' // Centers the image
+            },
+            {
+                quality: 'auto',    // Auto optimize quality
+                fetch_format: 'auto' // Auto format like WebP/AVIF for better performance
+            }]
+        });
+
+        // Remove the file from the local server after uploading to Cloudinary
+        const baseName = path.basename(req.file.path);
+        console.log("Deleting local file (cloudinary):", baseName);
+        const imagePath = path.join(paths.imageUploadDir, baseName);
+        console.log("Full image path (cloudinary):", imagePath);
+        // Check if the file exists before attempting to delete it
+        if (fs.existsSync(imagePath)) {
+            fs.unlinkSync(imagePath);
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Image uploaded successfully",
+            image_url: result.secure_url, // Use secure_url for HTTPS
+            public_id: result.public_id // Store public_id for later deletion if needed
+        });
+
+    } catch (error) {
+        console.error("Error uploading to Cloudinary:", error);
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+}
+
 
 export const addProduct = async (req, res, next) => {
     const session = await mongoose.startSession();
@@ -10,7 +51,7 @@ export const addProduct = async (req, res, next) => {
 
     try {
         // Logic to add a product
-        const { name, image, category, new_price, old_price, available } = req.body;
+        const { name, image, public_id, category, new_price, old_price, available } = req.body;
         if (!name ||!image || !category || !new_price || !old_price) {
             return res.status(400).json({ message: "All fields are required" });
         }
@@ -30,6 +71,7 @@ export const addProduct = async (req, res, next) => {
             id: id,
             name,
             image,
+            public_id: public_id || null, // Store the public_id if using cloudinary
             category,
             new_price,
             old_price,
@@ -75,13 +117,7 @@ export const deleteProduct = async (req, res, next) => {
         console.log("Deleting image:", product.image);
         console.log("Image upload directory:", paths.imageUploadDir);
         // Ensure the image path is correct
-        const baseName = path.basename(product.image)
-        const imagePath = path.join(paths.imageUploadDir, baseName);
-        console.log("Full image path:", imagePath);
-        // Check if the file exists before attempting to delete it
-        if (fs.existsSync(imagePath)) {
-            fs.unlinkSync(imagePath);
-        }
+        await cloudinary.uploader.destroy(product.public_id, { invalidate: true });
         // Commit the transaction
         await session.commitTransaction();
         session.endSession();
@@ -137,5 +173,19 @@ export const updateProduct = async (req, res, next) => {
         console.error("Error updating product:", error);
         res.status(500).json({ success: false, message: "Internal server error" });
         next(error)
+    }
+}
+
+export const getUsers = async (request, response, next) => {
+    try {
+        // Fetching user data from the database
+        let usersData = await Users.find({});
+        
+        // Sending the user data as a JSON response
+        response.status(200).json({success: true, data: usersData});
+    } 
+    catch (error) {
+        // Handling any errors that occur during the process
+        next(error);
     }
 }

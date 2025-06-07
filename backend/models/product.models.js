@@ -21,7 +21,12 @@ const ProductSchema = mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    match: [/^http:\/\/localhost:\d+\/images\/[a-zA-Z0-9_-]+\.(jpg|jpeg|png|gif)$/i, 'Please provide a valid image URL'],
+    // match: [/^http:\/\/localhost:\d+\/images\/[a-zA-Z0-9_-]+\.(jpg|jpeg|png|gif)$/i, 'Please provide a valid image URL'],
+  },
+  public_id: {
+    type: String,
+    required: false,
+    trim: true,
   },
   category: {
     type: String,

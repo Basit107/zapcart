@@ -10,4 +10,8 @@ export const {
     JWT_EXPIRATION,
     ARCJET_KEY,
     ARCJET_ENV,
+    CLOUD_NAME,
+    CLOUD_API_SECRET,
+    CLOUD_API_KEY,
+    CLOUDINARY_URL,
 } = process.env;

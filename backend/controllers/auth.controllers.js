@@ -285,10 +285,11 @@ export const adminSignUp = async (request, response, next) => {
 }
 
 export const adminSignOut = async (request, response, next) => {
+
     response.clearCookie("token", {
         httpOnly: true,
         secure: false, // Set to true if using HTTPS
-        sameSite: "none",
+        sameSite: "Lax",
     });
     response.status(200).json({
         success: true,

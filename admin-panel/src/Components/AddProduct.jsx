@@ -8,6 +8,7 @@ const AddProduct = () => {
   const [productDetails, setProductDetails] = useState({
     name: "",
     image: "",
+    public_id: "",
     category: "mobile",
     new_price: "",
     old_price: "",
@@ -33,6 +34,7 @@ const AddProduct = () => {
     if (res.data.success) {
       console.log("Image Uploaded Successfully: ", res.data.image_url);
       product.image = res.data.image_url;
+      product.public_id = res.data.public_id;
       await api.post("v1/admins/add-product", product)
         .then((res) => res.data)
         .then((data) =>

@@ -1,8 +1,8 @@
 import Router from 'express';
 import { authorizeAdmin } from '../middlewares/auth.middlewares.js';
-import { getUsers } from '../controllers/user.controllers.js';
-import { addProduct, deleteProduct, updateProduct } from '../controllers/admin.controllers.js';
-import { staticUpload, upload } from '../middlewares/upload.middlewares.js';
+import upload from '../middlewares/upload.middlewares.js';
+import { addProduct, cloudinaryUpload, deleteProduct, updateProduct, getUsers } from '../controllers/admin.controllers.js';
+import { getAnalyticsData } from '../controllers/analytics.controllers.js';
 
 const adminRouter = Router();
 
@@ -13,9 +13,11 @@ adminRouter.get('/', (req, res) => {
 });
 
 adminRouter.get('/get-users', getUsers)
+adminRouter.get('/analytics', getAnalyticsData)
+
+adminRouter.post("/upload", upload.single('product'), cloudinaryUpload);
 adminRouter.post('/add-product', addProduct)
 adminRouter.delete('/product/:id', deleteProduct)
 adminRouter.put('/product/:id', updateProduct)
-adminRouter.post("/upload", upload.single('product'), staticUpload);
 
 export default adminRouter;

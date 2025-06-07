@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { signIn, signUp, signOut, adminSignUp, adminSignIn, getUserProfile, getAdminProfile } from "../controllers/auth.controllers.js";
+import { signIn, signUp, signOut, adminSignUp, adminSignIn, getUserProfile, getAdminProfile, adminSignOut } from "../controllers/auth.controllers.js";
 
 const authRouter = Router();
 
@@ -17,6 +17,6 @@ authRouter.post("/signout", signOut)
 // admin auth routes
 authRouter.post("/admin/signin", adminSignIn)
 authRouter.post("/admin/signup", adminSignUp)
-authRouter.post("/admin/signout", signOut)
+authRouter.post("/admin/signout", adminSignOut)
 
 export default authRouter;

@@ -35,6 +35,17 @@ const ListProduct = () => {
   };
 
   return (
+    <>
+    <style>
+      {`
+      .product-name {
+        text-decoration: none;
+      }
+      .product-name:hover {
+        text-decoration: underline !important;
+      }
+      `}
+    </style>
     <div className="container mt-4">
       <h3>List of All Products</h3>
       <div className="table-responsive mt-3">
@@ -59,8 +70,8 @@ const ListProduct = () => {
                     style={{ height: "50px", objectFit: "contain" }}
                   />
                 </td>
-                <td 
-                  style={{ cursor: "pointer", color: "#0d6efd", textDecoration: "underline" }}
+                <td className="product-name"
+                  style={{ cursor: "pointer", color: "black", textDecoration: "none", fontSize: "24" }}
                   onClick={() => {
                     setSelectedProduct(product);
                     setShowModal(true);
@@ -98,6 +109,7 @@ const ListProduct = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 

@@ -1,18 +1,5 @@
 import Users from '../models/user.models.js';
 
-export const getUsers = async (request, response, next) => {
-    try {
-        // Fetching user data from the database
-        let usersData = await Users.find({});
-        
-        // Sending the user data as a JSON response
-        response.status(200).json({success: true, data: usersData});
-    } 
-    catch (error) {
-        // Handling any errors that occur during the process
-        next(error);
-    }
-}
 
 export const getUser = async (request, response, next) => {
     try {
