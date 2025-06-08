@@ -5,6 +5,7 @@ import AddProduct from "../Components/AddProduct";
 import ListProduct from "../Components/ListProduct";
 import Navbar from "../Components/Navbar";
 import { Navigate } from "react-router-dom";
+import Analytics from "../Components/Analytics";
 
 const Admin = () => {
 
@@ -19,6 +20,7 @@ const Admin = () => {
             <Route index element={<Navigate to="listproduct" />} />
             <Route path='/addproduct' element={<AddProduct />} />
             <Route path='/listproduct' element={<ListProduct />} />
+            <Route path='/analytics' element={<Analytics className=" px-lg-3 border"/>} />
           </Routes>
         </div>
     </div>
