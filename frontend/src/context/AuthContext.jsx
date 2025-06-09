@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
         });
         if (response.status === 200 && response.data.success) {
           setIsLoggedIn(true);
-          setUserId(response.data.data.user._id);
+          setUserId(response.data.data.id);
           // setUserId(response.data.data.user._id);
         } else {
           setIsLoggedIn(false);
@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
       }
     };
     checkAuth();
-  }, []);
+  }, [userId]);
 
   const logout = async () => {
         await api.post("v1/auth/signout", {}, {

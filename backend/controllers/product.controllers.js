@@ -38,3 +38,16 @@ export const getNewProducts = async (req, res, next) => {
         next(error)
     }
 }
+
+export const getRelatedProducts = async (req, res, next) => {
+    try {
+        let products = await Product.find({category:req.body.category});
+        let newproducts = products.slice(1).slice(-4);
+        res.send(newproducts);
+        console.log("Related Products Have been Fetched.");
+    } catch (error) {
+        console.error("error fetching New products: ", error);
+        res.status(500).json({ success: false, message: "Internal server error" });
+        next(error)
+    }
+}

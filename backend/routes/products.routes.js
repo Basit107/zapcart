@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getAllProducts, getNewProducts, getPopularPrducts } from "../controllers/product.controllers.js";
+import { getAllProducts, getNewProducts, getPopularPrducts, getRelatedProducts } from "../controllers/product.controllers.js";
 
 const productRouter = Router();
 
@@ -16,5 +16,7 @@ productRouter.get('/newproducts', getNewProducts)
 
 //  End Point For Popular Products
 productRouter.get('/popularproducts', getPopularPrducts)
+
+productRouter.post('/relatedproducts', getRelatedProducts)
 
 export default productRouter;

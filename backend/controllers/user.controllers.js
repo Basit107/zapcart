@@ -66,14 +66,18 @@ export const removeProductFromCart = async (request, response, next) =>{
             error.status = 401
             throw error;
         }
-        let userData = await Users.findOne({_id:request.user.id});
+        let userData = await Users.findOne({_id:request.params.id});
 
         if (userData.cartData[request.body.itemId] > 0) {
             userData.cartData[request.body.itemId] -= 1;
-            await Users.findOneAndUpdate({_id:request.user.id}, {cartData:userData.cartData});
+            await Users.findOneAndUpdate({_id:request.params.id}, {cartData:userData.cartData});
             response.send({
             success: true,
             message: "Product Removed From Cart"
+            })
+        } else {
+            response.status(200).send({
+                message: "Cart Item not Found."
             })
         }
     }

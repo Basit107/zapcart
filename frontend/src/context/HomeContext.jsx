@@ -76,7 +76,7 @@ const HomeContextProvider = (props)=> {
         }));
 
         try {
-            const res = await api.post('v1/users/removefromcart', { itemId });
+            const res = await api.put(`v1/users/${userId}/removefromcart`, { itemId });
             console.log(res.data);
         } catch (err) {
             console.error('Error removing from cart:', err);
