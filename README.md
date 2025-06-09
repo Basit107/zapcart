@@ -102,7 +102,7 @@ zapcart/
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/zapcart.git
+git clone https://github.com/Basit107/zapcart.git
 cd zapcart
 ```
 
