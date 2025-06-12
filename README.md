@@ -113,7 +113,7 @@ cd backend
 npm install
 ```
 
-- Create a `.env` file in `backend/` with:
+- Create a `.env` or `.env.development.local` file in `backend/` with:
 
 ```env
 PORT=5000
@@ -138,6 +138,28 @@ cd ../admin-panel
 npm install
 ```
 
+### 4. Run Both The Frontend & Backend with these:
+
+
+- <h3>For Frontend</h3>
+
+```bash
+cd /zapcart
+npm run dev:frontend
+```
+- <h3>For Backend</h3>
+
+```bash
+cd /zapcart
+npm run dev:backend
+```
+
+- <h3>For Admin Panel</h3>
+
+```bash
+cd /zapcart
+npm run dev:admin
+```
 ---
 
 ## 🔑 API Overview
