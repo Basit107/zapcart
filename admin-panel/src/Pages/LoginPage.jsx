@@ -1,11 +1,8 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { LogIn, Mail, Lock, Loader } from "lucide-react";
-import { div } from "framer-motion/client";
 import api from "../config/axios.js";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { set } from "mongoose";
 
 const LoginPage = () => {
 	const [formData, setFormData] = useState({ email: "", password: "" });

@@ -2,10 +2,11 @@ import React from "react";
 import Sidebar from "../Components/Sidebar";
 import { Route, Routes } from "react-router-dom";
 import AddProduct from "../Components/AddProduct";
-import ListProduct from "../Components/ListProduct";
 import Navbar from "../Components/Navbar";
 import { Navigate } from "react-router-dom";
-import Analytics from "../Components/Analytics";
+const ListProduct = React.lazy(() => import("../Components/ListProduct"));
+const Analytics = React.lazy(() => import("../Components/Analytics"));
+// This code imports React and other necessary components for the admin panel.
 
 const Admin = () => {
 

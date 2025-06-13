@@ -1,5 +1,4 @@
 // AuthContext.js
-import { set } from "mongoose";
 import { createContext, useContext, useState, useEffect } from "react";
 import api from "../config/axios.js";
 
