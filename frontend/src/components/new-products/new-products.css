@@ -3,8 +3,8 @@
     display: flex;
     flex-direction: column;
     text-align: center;
-    padding-left: 40px;
-    padding-right: 40px;
+    padding-left: 20px;
+    padding-right: 20px;
     align-items: center;
     background-color: #f9f9f9;
     margin: 20px 0;
@@ -27,10 +27,10 @@
 /* Grid layout for new products */
 .products {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr; /* Responsive grid */
-    gap: 30px; /* Space between product items */
+    grid-template-columns: 1fr 1fr 1fr 1fr; /* Responsive grid */
+    gap: 20px; /* Space between product items */
     justify-items: center;
-    padding: 40px 40px 40px 40px;
+    padding: 30px 30px 30px 30px;
 }
 
 /* Item component styling */
@@ -41,12 +41,12 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     width: 100%;
-    max-width: 250px;
+    max-width: 330px;
     text-align: left;
 }
 
 .item:hover {
-    transform: translateY(-5px);
+    transform: translateY(-7px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
 }
 

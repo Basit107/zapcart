@@ -6,7 +6,9 @@
     padding: 40px;
     background-color: #f5f5f5;
     border-radius: 13px;
-    margin: 30px;
+    margin-top: 6rem;
+    padding-top: 6rem;
+    max-width: max-content;
 }
 
 /* Styling for the left section (text) */

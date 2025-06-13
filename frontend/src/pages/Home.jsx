@@ -6,7 +6,7 @@ import NewProducts from '../components/new-products/NewProducts';
 
 const Home = () => {
     return (
-        <div>
+        <div className='home-page'>
             <Exclusive />
             <Popular />
             <Offers />

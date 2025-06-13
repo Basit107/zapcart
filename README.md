@@ -128,13 +128,10 @@ ARCJET_KEY=your_arcjet_key
 ARCJET_ENV=environment
 ```
 
-### 3. Frontend & Admin Panel Setup
+### 3. Backend, Frontend & Admin Panel Setup
 
 ```bash
-cd ../frontend
-npm install
-
-cd ../admin-panel
+cd ../zapcart
 npm install
 ```
 

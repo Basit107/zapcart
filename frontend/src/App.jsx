@@ -11,6 +11,7 @@ import Footer from './components/footer/Footer';
 import HomeCategory from './pages/HomeCategory';
 import banner1 from './components/assets/banner1.png';
 import LoginSignup from './pages/LoginSignup';
+import NotFound from './pages/NotFound';
 
 
 function App() {
@@ -29,6 +30,9 @@ function App() {
           </Route>
           <Route path='/cart' element={<Cart/>}/>
           <Route path='/login' element={<LoginSignup />}/>
+
+          {/* ⛔ Catch-all route for 404 */}
+          <Route path="*" element={<NotFound />} />
         </Routes> 
         <Footer />
       </BrowserRouter>
