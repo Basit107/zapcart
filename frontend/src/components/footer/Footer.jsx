@@ -1,6 +1,6 @@
 import React from "react";
 import './footer.css'
-import logo from '../assets/cart_icon.png'
+import logo from '../assets/zapcart_footer.png'
 import instagram_icon from '../assets/instagram_icon.png'
 import whatsapp_icon from '../assets/whatsapp_icon.png'
 import linkedin_icon from '../assets/linkedin_icon.png'
@@ -11,7 +11,7 @@ const Footer = () => {
     return (
         <div className="footer">
             <div className="footer-logo">
-                <img src={logo} alt="" />
+                <img src={logo} alt="" width={500} height={500}/>
                 <p>ZapCart</p>
             </div>
             <ul className="footer-links">
