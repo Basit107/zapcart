@@ -23,9 +23,9 @@ export const cloudinaryUpload = async (req, res) => {
 
         // Remove the file from the local server after uploading to Cloudinary
         const baseName = path.basename(req.file.path);
-        console.log("Deleting local file (cloudinary):", baseName);
+        // log("Deleting local file (cloudinary):", baseName);
         const imagePath = path.join(paths.imageUploadDir, baseName);
-        console.log("Full image path (cloudinary):", imagePath);
+        // ("Full image path (cloudinary):", imagePath);
         // Check if the file exists before attempting to delete it
         if (fs.existsSync(imagePath)) {
             fs.unlinkSync(imagePath);
@@ -39,7 +39,7 @@ export const cloudinaryUpload = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Error uploading to Cloudinary:", error);
+        console.error("Error uploading to Cloudinary:", error.message);
         res.status(500).json({ success: false, message: "Internal server error" });
     }
 }
@@ -114,8 +114,8 @@ export const deleteProduct = async (req, res, next) => {
             return res.status(404).json({ success: false, message: "Product not found" });
         }
         // Delete the image file from the server
-        console.log("Deleting image:", product.image);
-        console.log("Image upload directory:", paths.imageUploadDir);
+        // log("Deleting image:", product.image);
+        // log("Image upload directory:", paths.imageUploadDir);
         // Ensure the image path is correct
         await cloudinary.uploader.destroy(product.public_id, { invalidate: true });
         // Commit the transaction
@@ -128,7 +128,7 @@ export const deleteProduct = async (req, res, next) => {
         });
 
     } catch (error) {
-        console.error("Error deleting product:", error);
+        console.error("Error deleting product:", error.message);
         res.status(500).json({ success: false, message: "Internal server error" });
         next(error)
     }
@@ -170,7 +170,7 @@ export const updateProduct = async (req, res, next) => {
     } catch (error) {
         await session.abortTransaction();
         session.endSession();
-        console.error("Error updating product:", error);
+        console.error("Error updating product:", error.message);
         res.status(500).json({ success: false, message: "Internal server error" });
         next(error)
     }

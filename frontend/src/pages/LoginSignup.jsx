@@ -21,7 +21,7 @@ const LoginSignUp = () => {
     }
 
     const login = async () => {
-        console.log("login Function Executed: ", formData);
+        // log("login Function Executed: ", formData);
         setLoading(true);
 
         try {
@@ -49,7 +49,7 @@ const LoginSignUp = () => {
 
 
     const signup = async () => {
-        console.log("Sign Up Function Executed: ", formData);
+        // log("Sign Up Function Executed: ", formData);
 
         try {
             const res = await api.post('v1/auth/signup', formData); // token sent via cookie

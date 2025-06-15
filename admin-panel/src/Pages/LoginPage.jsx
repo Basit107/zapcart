@@ -21,12 +21,12 @@ const LoginPage = () => {
 	};
 
 	const login = async () => {
-		console.log("login Function Executed: ", formData);
+		// log("login Function Executed: ", formData);
 
 		const response = await api.post("/v1/auth/admin/signin", formData);
 
 		if (response.data.success) {
-      console.log("Login Successful: ", response.data);
+      // log("Login Successful: ", response.data);
 			setIsAuthenticated(true); // from AuthContext
       setUser(response.data.data.admin); // from AuthContext
       navigate("/admin");

@@ -95,7 +95,7 @@ const Analytics = () => {
             res.data.analyticsData;
           setMetrics({ users, products, totalRevenue, totalSales });
           // setDailyData(res.data.totalSalesData.dailySalesData);
-          // console.log("Daily Sales Data:", dailyData)
+          // log("Daily Sales Data:", dailyData)
         }
       } catch (err) {
         console.error(err);

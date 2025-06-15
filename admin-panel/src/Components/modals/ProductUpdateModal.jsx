@@ -26,13 +26,13 @@ const ProductUpdateModal = ({ show, handleClose, product, refreshProducts }) => 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Updated Form Data:", formData);
+    // \log("Updated Form Data:", formData);
 
     try {
       const res = await api.put(`/v1/admins/product/${product.id}`, formData);
 
       if (res.status === 200) {
-        console.log("Product updated!");
+        // log("Product updated!");
         refreshProducts(); // Refresh the product list
         handleClose(); // Close the modal
       }

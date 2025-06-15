@@ -1,26 +1,27 @@
 // server.js
 import express from "express";
-import path, {dirname}  from "path";
+import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 
 // Importing Environment Variables
 import { PORT } from './config/env.js';
 
 // Importing Routers
-import userRouter from "./routes/users.routes.js";
+import adminRouter from "./routes/admin.routes.js";
 import authRouter from "./routes/auth.routes.js";
 import productRouter from "./routes/products.routes.js";
-import adminRouter from "./routes/admin.routes.js";
+import userRouter from "./routes/users.routes.js";
 
 // Importing Database
 import connectToMongoDB from "./database/mongodb.js";
 
 // Importing Middlewares
 import cors from 'cors';
-import errorMiddleware from "./middlewares/error.middlewares.js";
-import arcjetMiddleware from "./middlewares/arcjet.middlewares.js";
+import hpp from "hpp";
 import cookieConfig from "./config/cookieConfig.js";
 import { corsOptions } from "./config/cors.js";
+import arcjetMiddleware from "./middlewares/arcjet.middlewares.js";
+import errorMiddleware from "./middlewares/error.middlewares.js";
 
 const port = 4500;
 const app = express();
@@ -32,7 +33,13 @@ app.use(express.json());
 cookieConfig(app);
 app.use(express.urlencoded({extended:false}));
 app.use(cors(corsOptions));
-// app.use(arcjetMiddleware);
+app.use(arcjetMiddleware);
+app.use(hpp());
+
+// API Creation
+app.get("/", (request, response) => {
+  response.send("Express App is Running.")
+})
 
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/auth', authRouter);
@@ -40,15 +47,7 @@ app.use('/api/v1/products', productRouter);
 app.use('/api/v1/admins/', adminRouter);
 
 app.use('/images', express.static(path.join(__dirname, 'upload/images')))
-
-
 app.use(errorMiddleware);
-
-
-// API Creation
-app.get("/", (request, response) => {
-  response.send("Express App is Running.")
-})
 
 
 // Checks server runnung Or Not
@@ -59,7 +58,7 @@ app.listen(PORT, async (error) => {
     console.log("Connected to MongoDB Successfully");
   }
   else {
-    console.log("Error: " + error);
+    console.error("Error: " + error.message);
   }
 
 })

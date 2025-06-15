@@ -11,7 +11,7 @@ const getDefaultCart = () => {
     for (let index = 0; index < 300+1; index++) {
         cart[index] = 0;
     }
-    console.log(cart);
+    // log(cart);
     return cart;
 }
 
@@ -31,13 +31,13 @@ const HomeContextProvider = (props)=> {
 
             // ✅ Get user cart — backend uses cookie to identify user
             if (!userId || userId === "") {
-                console.log('User ID is not available. Cannot add to cart.');
+                // log('User ID is not available. Cannot add to cart.');
                 return;
             } else {
                 const cartRes = await api.get(`v1/users/${userId}/getcart`); // no user-id or auth-token needed
                 setCartItems(cartRes.data.cartData);
             }
-            console.log('Cart items:', cartItems);
+            // log('Cart items:', cartItems);
 
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -57,7 +57,7 @@ const HomeContextProvider = (props)=> {
         try {
             if (!!userId) {
                 const res = await api.put(`v1/users/${userId}/addtocart`, { itemId });
-                console.log(res.data);
+                // log(res.data);
             } else {
                 console.error('User ID is not available. Cannot add to cart.');
                 return;
@@ -76,8 +76,8 @@ const HomeContextProvider = (props)=> {
         }));
 
         try {
-            const res = await api.put(`v1/users/${userId}/removefromcart`, { itemId });
-            console.log(res.data);
+            await api.put(`v1/users/${userId}/removefromcart`, { itemId });
+            // log(res.data); const res = 
         } catch (err) {
             console.error('Error removing from cart:', err);
         }

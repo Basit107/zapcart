@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
         }
       } catch (error) {
         setIsAuthenticated(false);
-        console.error("Authentication check failed:", error);
+        console.error("Authentication check failed:", error.message);
         setLoading(false);
       }
     };

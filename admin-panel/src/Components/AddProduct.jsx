@@ -32,7 +32,7 @@ const AddProduct = () => {
     const res = await api.post("v1/admins/upload", formData)
 
     if (res.data.success) {
-      console.log("Image Uploaded Successfully: ", res.data.image_url);
+      // If the image upload is successful, proceed to add the product
       product.image = res.data.image_url;
       product.public_id = res.data.public_id;
       await api.post("v1/admins/add-product", product)

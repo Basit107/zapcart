@@ -23,10 +23,10 @@ const ListProduct = () => {
       const res = await api.delete(`v1/admins/product/${id}`)
 
       if (res.status === 200 || res.status === 204) {
-        console.log('Product deleted successfully');
+        // log('Product deleted successfully');
         await fetchInfo(); // Refresh product list or data
       } else {
-        console.warn('Unexpected response:', res.status, res.data);
+        console.warn('Unexpected response:', res.status);
       }
 
     } catch (error) {
